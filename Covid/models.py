@@ -72,6 +72,8 @@ class SIR_Model:
         print('rho = {:.2e}'.format(self.rho))
         print('ic = {:.2e}'.format(self.ic))
         print('วันที่ใช้คำนวณเงื่อนไขเริ่มต้น คือวันที่ {} ของการระบาด'.format(self.ds))
+    def resetN(self, N):
+        self.S = np.ones(len(self.I))*N - self.I -self.R
 
 class SIRD_Model(SIR_Model):
     def __init__(self, data, N):
@@ -95,9 +97,25 @@ class SIRD_Model(SIR_Model):
         return np.real(slope)
     def predictI(self, npoints,day):
         self.br = -1
+        try:
+            ds = self.initial_value[0]
+            I0 = self.initial_value[1]
+        except:
+            ds = self.ds
+            I0 = self.I[self.ds]
         x,y = RungeKuttaSolve(
-            self.iprime, day, self.ds,
-            self.I[self.ds], npoints
+            self.iprime, day, ds,
+            I0, npoints
             )
+        k = len(x) -1
+        self.last_value = np.array([x[k], y[k]])
+        if hasattr(self, 'initial_value'):
+            self.initial_value =np.array([x[k], y[k]])
         return x,y
+    def beginCont(self):
+        self.initial_value = self.last_value
+    def endCont(self):
+        try:
+            del self.last_value
+        except: pass
    
