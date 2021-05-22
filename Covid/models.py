@@ -19,6 +19,7 @@ class SIR_Model:
         self.b = b
         self.ic = self.I[ds] + self.S[ds] -self.rho*np.log(self.S[ds])
         self.ds = ds
+        self.dt = dt
         return {"a": a, "b":b, "rho": self.rho}
     def setIC(self,a,b,ds):
         self.rho = b/a
@@ -88,6 +89,7 @@ class SIRD_Model(SIR_Model):
         self.k = k
         self.ic = k *self.I[ds] + self.S[ds] -self.rho*np.log(self.S[ds])
         self.ds = ds
+        self.dt = dt
         return {"a": a, "b":b,"k": k ,"rho": self.rho}
     def iprime(self, t,I):
         S_If = -self.rho*lambertw(-np.exp((self.k*I-self.ic)/self.rho)/(self.rho),self.br)
