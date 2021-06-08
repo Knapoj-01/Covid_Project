@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def interactPlotting(obj, plotrange, npoints = 300):
     def plotI():
-        Ix, Iy = obj.predictI(npoints,plotrange)
+        Ix, Iy = obj.predictI(plotrange)
         fig, ax = plt.subplots()
         ax.plot(Ix, Iy)
         ax.scatter(obj.getData("day")[plotrange[0]:plotrange[1]],\
